@@ -1,0 +1,1 @@
+dev_appserver.py --php_executable_path /opt/lampp/bin/php-cgi --host 0.0.0.0 --enable_host_checking false --admin_host 0.0.0.0 --show_mail_body true --enable_sendmail true /home/elio/Git/zappp

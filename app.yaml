@@ -1,0 +1,91 @@
+# needed to run from windows
+# application: renovault
+# version: wpfromstarterproject
+
+runtime: php55
+api_version: 1
+threadsafe: yes
+
+env_variables:
+  
+  DEV_OR_DIST: DEV
+
+  # external datasets
+  OVERHEID_IO_URL_DEV: https://overheid.io
+  OVERHEID_IO_URL_DIST: https://overheid.io
+  HUISPEDIA_URL_DEV: https://api.huispedia.nl
+  HUISPEDIA_URL_DIST: https://api.huispedia.nl
+
+  OVERHEID_IO_API_KEY_DEV: 7c4406120dc739d8ee0bb375d27fd8e9c560292c55c23e755b63bfee1c5ff740
+  OVERHEID_IO_API_KEY_DIST: 7c4406120dc739d8ee0bb375d27fd8e9c560292c55c23e755b63bfee1c5ff740
+  HUISPEDIA_API_KEY_DEV: Kroh5D4aBdlxG4LI23
+  HUISPEDIA_API_KEY_DIST: Kroh5D4aBdlxG4LI23
+
+  # mollie.com
+  MOLLIE_COM_API_KEY_DEV: test_6Ppjcfe7w4h6CdeCwuGd8kyxEJgrUK
+  # MOLLIE_COM_API_KEY_DIST: test_6Ppjcfe7w4h6CdeCwuGd8kyxEJgrUK
+  MOLLIE_COM_API_KEY_DIST: live_sSGvTwR9DfhQzvh3eJbmdq9kJstmS9
+
+  MYSQL_DSN_PROD_USER: mysql:unix_socket=/cloudsql/mapsrenovault:europe-west1:dbrenovault
+  MYSQL_USER_PROD_USER: drome_user
+  MYSQL_PASSWORD_PROD_USER: 1SIrAkLGknklKZU61y6u
+
+  MYSQL_DSN_DEV_USER: mysql:host=127.0.0.1
+  MYSQL_USER_DEV_USER: drome_user
+  MYSQL_PASSWORD_DEV_USER: 1SIrAkLGknklKZU61y6u
+
+  MYSQL_DSN_PROD_SYSTEM: mysql:unix_socket=/cloudsql/mapsrenovault:europe-west1:dbrenovault
+  MYSQL_USER_PROD_SYSTEM: drome_system
+  MYSQL_PASSWORD_PROD_SYSTEM: pWyu2rbcIrGXQQ5TAyRC
+
+  MYSQL_DSN_DEV_SYSTEM: mysql:host=127.0.0.1
+  MYSQL_USER_DEV_SYSTEM: drome_system
+  MYSQL_PASSWORD_DEV_SYSTEM: pWyu2rbcIrGXQQ5TAyRC
+
+  MYSQL_DSN_PROD_BUG: mysql:dbname=flyspray;unix_socket=/cloudsql/mapsrenovault:europe-west1:dbrenovault
+  MYSQL_USER_PROD_BUG: flyspray
+  MYSQL_PASSWORD_PROD_BUG: CM0kvcQZAQcbGa9iKBbZ
+
+  MYSQL_DSN_DEV_BUG: mysql:dbname=flyspray;host=127.0.0.1
+  MYSQL_USER_DEV_BUG: flyspray
+  MYSQL_PASSWORD_DEV_BUG: CM0kvcQZAQcbGa9iKBbZ
+
+  MYSQL_DSN_PROD_VOTER: mysql:dbname=issuevoter;unix_socket=/cloudsql/mapsrenovault:europe-west1:dbrenovault
+  MYSQL_USER_PROD_VOTER: issuevoter
+  MYSQL_PASSWORD_PROD_VOTER: cbGaf45BbZCM0kvs3dZAQ
+
+  MYSQL_DSN_DEV_VOTER: mysql:dbname=issuevoter;host=127.0.0.1
+  MYSQL_USER_DEV_VOTER: issuevoter
+  MYSQL_PASSWORD_DEV_VOTER: cbGaf45BbZCM0kvs3dZAQ
+
+handlers:
+
+- url: /js
+  static_dir: js
+  secure: always
+
+- url: /node_modules
+  static_dir: node_modules
+  secure: always
+
+- url: /css
+  static_dir: css
+  secure: always
+
+- url: /fonts
+  static_dir: fonts
+  secure: always
+
+- url: /images
+  static_dir: images
+  secure: always
+
+# api
+- url: /api/(.*)$
+  script: /api/index.php
+  secure: always
+
+# front handler (matches anything)
+- url: /(.*)$
+  script: index.php 
+  secure: always
