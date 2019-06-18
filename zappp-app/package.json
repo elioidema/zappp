@@ -1,0 +1,13 @@
+{
+  "name": "zappp-app",
+  "private": true,
+  "scripts": {
+    "build": "gridsome build",
+    "develop": "gridsome develop",
+    "explore": "gridsome explore"
+  },
+  "dependencies": {
+    "automake": "^0.1.4",
+    "gridsome": "^0.6.0"
+  }
+}
