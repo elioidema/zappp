@@ -73,7 +73,7 @@ class Connection {
 
 	public static function setUserSchema()
 	{
-		R::exec("USE drome_user;");	
+		R::exec("USE zappp;");	
 	}
 
 	public static function setDataSchema()

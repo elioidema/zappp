@@ -5,6 +5,10 @@ require_once('Connection.php');
 require_once('RedbeanSessionHandler.class.php');
 require_once('HttpHandler.class.php');
 require_once('EmailManager.class.php');
+require_once('CrudBeanHandler.class.php');
+require_once('PaymentHandler.class.php');
+require_once('PaymentHandlerMollieAPI.class.php');
+require_once('TransactionManager.class.php');
 
 require_once('CrudManager.class.php');
 require_once('PartyAccountManager.class.php');
@@ -39,6 +43,7 @@ Connection::setVariable('securitylogin', $partyAccountLogin);
 
 CrudManager::registerRoutes('crud');
 PartyAccountManager::registerRoutes('partyaccount');
+TransactionManager::registerRoutes('transaction');
 
 // Flight::route('/', function(){
 //     echo 'hello world!';

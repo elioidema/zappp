@@ -1,0 +1,4 @@
+CREATE USER 'zappp'@'%' IDENTIFIED BY 'VF9VJTmDn23RErxvSYxV';
+GRANT USAGE ON *.* TO 'zappp'@'%';
+CREATE DATABASE IF NOT EXISTS `zappp`;
+GRANT ALL PRIVILEGES ON `zappp`.* TO 'zappp'@'%';
