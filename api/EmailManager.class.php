@@ -20,7 +20,7 @@ class EmailManager
 
 		$messageHTML = str_replace($notProtocol, $protocol, $messageHTML);
 
-		$from = SettingsManager::getSetting('email.fromaddress');
+		$from = 'idema.elio@gmail.com';
 		
 		$email = R::dispense('email');
 
@@ -45,18 +45,10 @@ class EmailManager
 
 	public static function adminSendEmail($to, $subject, $messageHTML, $securityid)
 	{
-		SecurityManager::adminSetAdminVariable();
+		Connection::adminSetAdminVariable();
 
 		self::sendEmail($to, $subject, $messageHTML, $securityid);
 
-		SecurityManager::adminUnSetAdminVariable();
-	}
-
-	public static function sendContentitemEmail($to, $subjectitem, $messageitem, $securityid)
-	{
-		$subject = ContentItemManager::getAllCurrentLanguageContentItem($subjectitem);		
-		$message = ContentItemManager::getAllCurrentLanguageContentItem($messageitem);
-		
-		self::sendEmail($to, $subject, $message, $securityid);
+		Connection::adminUnSetAdminVariable();
 	}
 }

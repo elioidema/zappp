@@ -104,5 +104,15 @@ class Connection {
 		}
 	}
 
+	public static function adminSetAdminVariable() 
+    {
+        Connection::setVariable('securityadminmode', 'Y');
+    }
+
+    public static function adminUnSetAdminVariable() 
+    {
+        Connection::unSetVariable('securityadminmode');
+    }
+
 }
 

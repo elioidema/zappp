@@ -37,11 +37,12 @@ class PartyAccountManager
 			Flight::json(HttpHandler::createResponse(200, $result));	
 		});
 
-        Flight::route("POST /${apiName}/confirmregistration/@email/@confirmationcode", function($email, $confirmationcode) {
+        Flight::route("GET /${apiName}/confirmregistration/@email/@confirmationcode", function($email, $confirmationcode) {
 
 			$result = self::confirmRegistration($email, $confirmationcode);
 
-            Flight::json(HttpHandler::createResponse(200, $result));	
+			// Flight::json(HttpHandler::createResponse(200, $result));
+			exit();	
         });
 
 
@@ -235,7 +236,7 @@ class PartyAccountManager
 		$encoded_email = self::base64_url_encode($bean->login);
 
 		$protocol = 'https://';
-    	$link = $protocol . $_SERVER['HTTP_HOST'] . '/partyaccountlogin/confirmregistration/' . $encoded_email . '/' . $bean->confirmationcode; 
+    	$link = $protocol . $_SERVER['HTTP_HOST'] . '/api/partyaccount/confirmregistration/' . $encoded_email . '/' . $bean->confirmationcode; 
 
 		$message = "confirmation text [%activationlink%] ";
 		$message = str_replace('[%activationlink%]', $link, $message);
@@ -268,32 +269,41 @@ class PartyAccountManager
 
 		$partyAccountBean = self::getPartyAccountSensitive($email);
 
-		if ($partyAccountBean != NULL && $partyAccountBean->confirmationcode == $confirmationcode && $partyAccountBean->registrationConfirmed == FALSE)
+		if ($partyAccountBean != NULL && $partyAccountBean->confirmationcode == $confirmationcode)
 		{
-			$partyAccountBean->registrationconfirmed = TRUE;
-			
-			$accountacceptancerequired = 'N';
-			if ($accountacceptancerequired == 'Y')
+			if ($partyAccountBean->registrationconfirmed == FALSE) 
 			{
-				$partyAccountBean->registrationstep = 'CONFIRMED';
-				EmailManager::adminSendEmail(SettingsManager::getSetting('email.fromaddress'), "ACTIE BENODIGD - Gebruiker bevestigd: " . $partyAccountBean->login, "<automatisch gegenereerd bericht>De gebruiker heeft op de bevestigingslink geklikt en wacht nu op acceptatie of weigering.", NULL);
+				$partyAccountBean->registrationconfirmed = TRUE;
+				
+				$accountacceptancerequired = 'N';
+				if ($accountacceptancerequired == 'Y')
+				{
+					$partyAccountBean->registrationstep = 'CONFIRMED';
+					EmailManager::adminSendEmail(SettingsManager::getSetting('email.fromaddress'), "ACTIE BENODIGD - Gebruiker bevestigd: " . $partyAccountBean->login, "<automatisch gegenereerd bericht>De gebruiker heeft op de bevestigingslink geklikt en wacht nu op acceptatie of weigering.", NULL);
+				}
+				else
+				{
+					// immediately accept
+					$partyAccountBean->registrationstep = 'ACCEPTED';
+					$partyAccountBean->accountopen = TRUE;
+					// EmailManager::adminSendEmail(SettingsManager::getSetting('email.fromaddress'), "TER INFO - Gebruiker bevestigd: " . $partyAccountBean->login, "<automatisch gegenereerd bericht>De gebruiker heeft op de bevestigingslink geklikt.", NULL);
+				}
+
+				Connection::adminSetAdminVariable();
+				R::store($partyAccountBean);
+				Connection::adminUnSetAdminVariable();
+
+				echo "Uw registratie is bevestigd. U kunt nu inloggen.";
 			}
 			else
 			{
-				// immediately accept
-				$partyAccountBean->registrationstep = 'ACCEPTED';
-				$partyAccountBean->accountopen = TRUE;
-				// EmailManager::adminSendEmail(SettingsManager::getSetting('email.fromaddress'), "TER INFO - Gebruiker bevestigd: " . $partyAccountBean->login, "<automatisch gegenereerd bericht>De gebruiker heeft op de bevestigingslink geklikt.", NULL);
+				echo "Uw registratie is al eens bevestigd. U kunt nu inloggen.";
 			}
-
-			SecurityManager::adminSetAdminVariable();
-			R::store($partyAccountBean);
-			SecurityManager::adminUnSetAdminVariable();
-
-			return TRUE;
 		}
-
-		return FALSE;
+		else
+		{
+			echo "Uw registratie kon niet worden bevestigd :(";
+		}
 	}
 
 	public static function forgotPassword($email)
@@ -306,13 +316,13 @@ class PartyAccountManager
 			$partyAccountBean->restoreconfirmationcode = self::generateRandomConfirmationCode();;
 			$partyAccountBean->restoredate = R::isoDateTime();
 
-			SecurityManager::adminSetAdminVariable();
+			Connection::adminSetAdminVariable();
 			R::store($partyAccountBean);
-			SecurityManager::adminUnSetAdminVariable();
+			Connection::adminUnSetAdminVariable();
 
 			// send email
 			$protocol = 'https://';
-    		$link = $protocol . $_SERVER['HTTP_HOST'] . '/partyaccountlogin/restorepassword/' . $partyAccountBean->login . '/' . $partyAccountBean->restoreconfirmationcode; 
+    		$link = $protocol . $_SERVER['HTTP_HOST'] . '/partyaccount/restorepassword/' . $partyAccountBean->login . '/' . $partyAccountBean->restoreconfirmationcode; 
 
 
 			$message = ContentItemManager::getAllCurrentLanguageContentItem('email.forgotpassword.message');
@@ -343,11 +353,11 @@ class PartyAccountManager
 			&& $restoreMinutes >= 0 
 			&& $restoreMinutes <= 60 )
 		{
-			SecurityManager::adminSetAdminVariable();
+			Connection::adminSetAdminVariable();
 			$partyAccountBean->restoreconfirmationcode = '';
 			R::store($partyAccountBean);
 			self::setPassword($partyAccountBean, $restorePassword);
-			SecurityManager::adminUnSetAdminVariable();
+			Connection::adminUnSetAdminVariable();
 
 			// EmailManager::adminSendEmail(SettingsManager::getSetting('email.fromaddress'), "TER INFO - Gebruiker heeft wachtwoord hersteld: " . $bean->login, "<automatisch gegenereerd bericht>De gebruiker heeft op de bevestigingslink geklikt en wacht nu op acceptatie of weigering.", NULL);
 
