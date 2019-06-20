@@ -7,9 +7,7 @@
       <button class="bg-blue text-white font-bold py-2 px-4 rounded border block mx-auto w-full">
         Registreer
       </button>
-      <button class="bg-secondary text-white font-bold py-2 px-4 rounded border block mx-auto w-full">
-         <router-link to='/'>Inloggen</router-link>
-      </button>
+      <router-link to='/' class="bg-secondary text-white font-bold mt-3 py-2 px-4 rounded border block mx-auto">Inloggen</router-link>
     </form>
   </div>
 </template>
