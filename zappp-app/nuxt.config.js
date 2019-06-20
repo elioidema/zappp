@@ -13,7 +13,10 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    ],
+    script: [
+      { src: 'https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js' }
+    ],
   },
   /*
   ** Customize the progress-bar color

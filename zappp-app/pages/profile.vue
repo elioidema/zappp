@@ -3,10 +3,11 @@
     <form  v-on:submit.prevent="postLogin()" class="bg-primary text-center w-1/3 px-3 py-4 text-white mx-auto rounded">
       <input type="text" placeholder="Username" class="block w-full mx-auto text-sm py-2 px-3 rounded" />
       <input type="text" placeholder="Password" class="block w-full mx-auto text-sm py-2 px-3 rounded my-3" />
+      <input type="text" placeholder="Password 2" class="block w-full mx-auto text-sm py-2 px-3 rounded my-3" />
       <button class="bg-blue text-white font-bold py-2 px-4 rounded border block mx-auto w-full">
-        Login
+        Registreer
       </button>
-      <router-link to='/profile' class="bg-secondary text-white font-bold mt-3 py-2 px-4 rounded border block mx-auto">Registreren</router-link>
+      <router-link to='/' class="bg-secondary text-white font-bold mt-3 py-2 px-4 rounded border block mx-auto">Inloggen</router-link>
     </form>
   </div>
 </template>
@@ -17,8 +18,7 @@ export default {
 
   methods: {
     postLogin() {
-      console.log('test 11112233');
-        axios.post('http://192.168.8.118:8080/api/partyaccount/signIn', { login: 'w.kreischer@gmail.com', password: 'asdfasdf'})
+        axios.post('http://192.168.8.118:8080/api/partyaccount/register', { login: 'w.kreischer@gmail.com', password: 'asdfasdf'})
         .then((response) => {
           console.log(response)
         })
