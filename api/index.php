@@ -19,9 +19,9 @@ header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Credentials");
 
-// Flight::route("OPTIONS /*", function() {
-//     exit();	
-// });
+Flight::route("OPTIONS /*", function() {
+    exit();	
+});
 
 Connection::connectAsUser();
 Connection::setUserSchema();

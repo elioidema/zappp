@@ -10,7 +10,7 @@ class TransactionManager
 
             if ($partyAccountId > 0)
             {
-                $t = self::addTransaction($amount);
+                $t = self::addNewTransaction($amount);
                 $tid = $t->id;
                 $t->from = -1;
                 $t->to = $partyAccountId;
@@ -118,7 +118,7 @@ class TransactionManager
 
         Flight::route("POST /${apiName}", function() {
             $posted = HttpHandler::handleRequest();
-            $bean = self::addNewTransaction($posted);
+            $bean = self::addNewTransaction($posted->amount);
             $array = CrudBeanHandler::exportBean($bean);
             Flight::json(HttpHandler::createResponse(201, $array));
         });
@@ -133,14 +133,6 @@ class TransactionManager
 
     }
 
-    public static function addNewTransaction($posted) 
-    {
-        $bean = CrudBeanHandler::dispenseBean('transaction');
-        CrudBeanHandler::updateBean($bean, $posted);
-        CrudBeanHandler::storeBean($bean);
-        return $bean;
-    }
-
     public static function updateTransaction($id, $posted) 
     {
         $bean = CrudBeanHandler::findBean('transaction', $id);
@@ -149,18 +141,17 @@ class TransactionManager
         return $bean;
     }
     
-    public static function addTransaction($amount)
+    public static function addNewTransaction($amount)
     {
         $partyAccountId = PartyAccountManager::getSignedInPartyAccountId();
 
         if ($partyAccountId > 0)
         {
-            $transaction = CrudBeanHandler::dispenseBean('transactionagreement');
+            $transaction = CrudBeanHandler::dispenseBean('transaction');
             // can be removed
-            $transaction->securityid = $partyAccountId;
+            $transaction->from = $partyAccountId;
             $transaction->amount = $amount;
-            $transaction->status = 'NOTPAID';
-            $transaction->notpaiddate = R::isoDateTime();
+            $transaction->status = 'NOTCLAIMED';
 
             CrudBeanHandler::storeBean($transaction);
 
@@ -170,7 +161,7 @@ class TransactionManager
         return NULL;
     }
 
-    public static function setTransactionAgreementStatusPaid($transaction)
+    public static function setTransactionStatusPaid($transaction)
     {
         $transaction->status = 'PAID';
         $transaction->paiddate = R::isoDateTime();
@@ -179,7 +170,8 @@ class TransactionManager
 
     
     public static function getTransactions() {
-        $all = CrudBeanHandler::findAllBeans('transaction', ' ORDER BY id asc ');
+        // $all = CrudBeanHandler::findAllBeans('transaction', ' ORDER BY id asc ');
+        $all = CrudBeanHandler::queryBeans('transaction', '  ');
         return $all;
     }
 
