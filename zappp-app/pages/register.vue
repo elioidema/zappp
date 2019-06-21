@@ -14,13 +14,18 @@
         placeholder="Password"
         class="block w-full mx-auto text-sm py-2 px-3 rounded my-3"
       >
+      <input
+        type="text"
+        placeholder="Password 2"
+        class="block w-full mx-auto text-sm py-2 px-3 rounded my-3"
+      >
       <button
         class="bg-blue text-white font-bold py-2 px-4 rounded border block mx-auto w-full"
-      >Login</button>
+      >Registreer</button>
       <nuxt-link
-        to="/register"
+        to="/"
         class="bg-secondary text-white font-bold mt-3 py-2 px-4 rounded border block mx-auto"
-      >Registreren</nuxt-link>
+      >Inloggen</nuxt-link>
     </form>
   </div>
 </template>
@@ -29,10 +34,8 @@
 export default {
   methods: {
     postLogin() {
-      console.log(this.$store.state);
-
       axios
-        .post("http://192.168.8.118:8080/api/partyaccount/signIn", {
+        .post("http://192.168.8.118:8080/api/partyaccount/register", {
           login: "w.kreischer@gmail.com",
           password: "asdfasdf"
         })
